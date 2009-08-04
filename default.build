@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project name="Yadic" default="build" basedir=".">
+  <description>Master Build script for Yadic</description>
+
+  <include buildfile="macrodefs.xml" />
+  <include buildfile="common.properties" />
+
+  <fileset id="artifacts" basedir="${proj.dir}">
+    <include name="bin\release\*.dll" />
+  </fileset>
+
+  <target name="build" depends="-clean, -compile, -unittest, -copy-artifacts" description="compiles the source code and runs unit tests" />
+
+  <target name="-clean" description="deletes the build artifacts from previous build">
+    <clean-dir directory="${build.dir}" />
+  </target>
+
+  <target name="-compile" description="compiles fsharp code">
+    <exec basedir="." program="${fsc}">
+      <arg line="-r:&quot;${dotnet35}\System.Core.dll&quot; -r:${dotnet}\System.dll" />
+      <arg line="--warn:0 --nologo -a --optimize+ -o:${proj.dir}\bin\release\Yadic.dll .\src\Yadic\SimpleContainer.fs" />
+    </exec>
+    <build-project name="${test.dir}\Yadic.Tests.csproj" />
+  </target>
+
+  <target name="-unittest">
+    <test-assembly output="${reports.dir}" nunit="${nunit}" assembly="${test.dir}\bin\debug\Container.Tests.dll" />
+  </target>
+
+  <target name="-copy-artifacts">
+    <mkdir dir="${artifacts.dir}" />
+    <copy todir="${artifacts.dir}" flatten="true">
+      <fileset refid="artifacts" />
+    </copy>
+  </target>
+  
+</project>

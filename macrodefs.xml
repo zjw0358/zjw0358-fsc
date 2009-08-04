@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<project name="Common">
+  <description>Common build macrodefs</description>
+  
+  <macrodef name="build-project">
+    <attributes>
+      <attribute name="name" />
+    </attributes>
+    <sequential>
+      <msbuild project="${name}" target="Rebuild">
+        <property name="Configuration" value="debug" />
+        <arg line="/m:2 /tv:3.5 /v:m /clp:ErrorsOnly" />
+      </msbuild>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="clean-dir">
+    <attributes>
+      <attribute name="directory" />
+    </attributes>
+    <sequential>
+      <delete dir="${directory}" />
+      <mkdir dir="${directory}" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="test-assembly">
+    <attributes>
+      <attribute name="output" />
+      <attribute name="nunit" />
+      <attribute name="assembly" />
+    </attributes>
+    <sequential>
+      <mkdir dir="${output}" />
+      <exec basedir="." program="${nunit}">
+        <arg line="/xml=${output}\nunit-output.xml /nologo /nodots" />
+        <arg file="${assembly}" />
+      </exec>
+    </sequential>
+  </macrodef>
+
+</project>
