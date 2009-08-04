@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<project name="Yadic local build" default="build" basedir=".">
-  <description>Local environment Build script for developers</description>
-
-</project>
