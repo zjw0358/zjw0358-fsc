@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="yadic" default="build">
+
+    <property name="build.number" value="dev"/>
+    <property name="build.name" value="${ant.project.name}.${build.number}"/>
+    <property name="build" value="${basedir}/build"/>
+    <property name="build.output" value="${build}/output"/>
+    <property name="distribution" value="${build.output}/dist"/>
+    <property name="reports" value="${build.output}/reports"/>
+    <property name="src" value="${basedir}/src"/>
+    <property name="test" value="${basedir}/test"/>
+    <property name="release.jar" value="${distribution}/${build.name}.jar"/>
+    <property name="test.jar" value="${distribution}/${build.name}.test.jar"/>
+
+    <import file="${build}/macros.xml"/>
+
+    <path id="all.dependancies">
+        <fileset id="build.dependancies" dir="build/lib" includes="**/*.jar"/>
+        <fileset id="release.dependancies" dir="lib" includes="**/*.jar"/>
+    </path>
+
+    <path id="all.jars">
+        <path refid="all.dependancies"/>
+        <path path="${release.jar}"/>
+        <path path="${test.jar}"/>
+    </path>
+
+    <target name="clean" description="cleanup all">
+        <delete dir="${build.output}"/>
+    </target>
+
+    <target name="compile">
+        <compile.and.jar src="${src}" jar="${release.jar}" classpathref="all.dependancies"/>
+        <compile.and.jar src="${test}" jar="${test.jar}" classpathref="all.jars"/>
+    </target>
+
+    <target name="test">
+        <test jar="${test.jar}" classpathref="all.jars" reports="${reports}"/>
+    </target>
+
+    <target name="package">
+        <mkdir dir="${distribution}"/>
+
+        <zip destfile="${distribution}/${build.name}.src.zip" basedir="src"/>
+        
+        <propertyfile file="${distribution}/build.properties">
+          <entry key="stored.build.number" value="${build.number}"/>
+          <entry key="stored.build.name" value="${build.name}"/>
+        </propertyfile>
+    </target>
+
+    <target name="build" depends="clean, compile, test, package" description="build all"/>
+
+</project>
