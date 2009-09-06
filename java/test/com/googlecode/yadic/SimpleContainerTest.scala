@@ -7,6 +7,16 @@ import yadic.SimpleContainerTest._
 
 class SimpleContainerTest {
   @Test
+  def shouldResolveUsingConstructorWithMostDependenciesThatIsSatisfiable {
+    val container = new SimpleContainer
+    container.add(classOf[MyThingWithReverseConstructor])
+
+    var myThing: MyThingWithReverseConstructor = container.resolve(classOf[MyThingWithReverseConstructor]).asInstanceOf[MyThingWithReverseConstructor]
+
+    assertThat(myThing.dependency, is(nullValue(classOf[Thing])))
+  }
+
+  @Test
   def shouldChainContainersThroughMissingAction {
     val parent = new SimpleContainer
     parent.add(classOf[Thing], classOf[ThingWithNoDependencies])
