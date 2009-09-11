@@ -57,7 +57,7 @@ namespace Container.Tests
               });
 
             container.Resolve<IThing>();
-            IThing thing = container.Resolve<IThing>();
+            container.Resolve<IThing>();
 
             Assert.That(count, Is.EqualTo(1));
         }

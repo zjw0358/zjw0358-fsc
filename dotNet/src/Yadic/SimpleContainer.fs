@@ -24,11 +24,12 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
  let activators = new Dictionary<Type, unit->obj>()
  
  let get t = 
-  try 
+  match activators.ContainsKey(t) with 
+  | true ->  
    let instance = activators.[t]()
    activators.[t] <- fun() -> instance
    instance
-  with | :? KeyNotFoundException -> t |> missingHandler.Invoke
+  | false -> t |> missingHandler.Invoke
   
  let toInstance (t:Type, replacement) (p:ParameterInfo) = 
   let shouldReplace = p.ParameterType.Equals(t)
@@ -41,17 +42,17 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
   sortedConstructors.LastOrDefault().GetParameters()
  
  let getArgs (t,replacement) = 
-  getParameters >> Seq.map ((t,replacement) |> toInstance) >> Seq.to_array
-  
+  getParameters >> Array.map ((t,replacement) |> toInstance)
+ 
  let createInstance = Activator.CreateInstance : Type * obj array -> obj 
  
  let create (i,c,existing)  = 
   ( c, c |> getArgs (i,existing) ) |> createInstance
  
  let addActivator (t,f) =
-  try activators.Add(t,f)
-  with | :? System.ArgumentException -> 
-   raise( new ContainerException(t.ToString() + " already added to container"))
+  match activators.ContainsKey(t) with
+  | true -> raise( new ContainerException(t.ToString() + " already added to container"))
+  | false -> activators.Add(t,f)
  
  let add (i,c) =
   addActivator (i, fun() -> create (i,c,None))
