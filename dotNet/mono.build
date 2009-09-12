@@ -8,7 +8,7 @@
   <property name="dotnet35" value="/usr/lib/mono/gac/System.Core/3.5.0.0__b77a5c561934e089/"/>
   <property name="fsc.dir" value="tools/fsharp"/>
   <property name="fsc" value="${fsc.dir}/fsc"/>
-  <property name="nunit.dir" value="/tools/nunit"/>
+  <property name="nunit.dir" value="tools/nunit"/>
   <property name="nunit" value="${nunit.dir}/nunit-console"/>
 
   <target name="build" depends="-clean, -compile, -unittest" description="compiles the source code and runs unit tests" />
