@@ -73,7 +73,7 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
   [<OverloadID("addByConcrete")>]
   member this.Add<'T>(f) = (typeof<'T>, fun () -> f.Invoke() ) |> addActivator
   
-  member this.Resolve<'T>() = unbox<'T>( typeof<'T> |> get )
+  member this.Resolve<'T>() = typeof<'T> |> get :?> 'T 
   member this.Resolve(t) = t |> get
   member this.Decorate<'Interface,'Decorator>() = (typeof<'Interface>,typeof<'Decorator>) |> decorate
   
