@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Yadic", "src\Yadic\Yadic.fsproj", "{A1BD52CD-9177-4755-B5AF-80F50E5C991D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yadic.Tests", "src\Yadic.Tests\Yadic.Tests.csproj", "{87FEA5F3-0049-445E-A247-C33EC2222480}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0F730129-B00F-44F5-8C03-1EA5732A4EE1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{74DAC3C3-978D-4C98-91F3-8A27D0E525EE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yadic.Tests", "src\Yadic.Tests\Yadic.Tests.csproj", "{87FEA5F3-0049-445E-A247-C33EC2222480}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{9E592D2B-6A4A-46DB-BF56-F5A16FC4D96D}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,23 +22,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{87FEA5F3-0049-445E-A247-C33EC2222480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{87FEA5F3-0049-445E-A247-C33EC2222480}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{87FEA5F3-0049-445E-A247-C33EC2222480}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{87FEA5F3-0049-445E-A247-C33EC2222480}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A1BD52CD-9177-4755-B5AF-80F50E5C991D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1BD52CD-9177-4755-B5AF-80F50E5C991D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1BD52CD-9177-4755-B5AF-80F50E5C991D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1BD52CD-9177-4755-B5AF-80F50E5C991D}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{87FEA5F3-0049-445E-A247-C33EC2222480} = {74DAC3C3-978D-4C98-91F3-8A27D0E525EE}
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		version = 0.1
-		StartupItem = src\Yadic.Tests\Yadic.Tests.csproj
+		{87FEA5F3-0049-445E-A247-C33EC2222480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87FEA5F3-0049-445E-A247-C33EC2222480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87FEA5F3-0049-445E-A247-C33EC2222480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87FEA5F3-0049-445E-A247-C33EC2222480}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A1BD52CD-9177-4755-B5AF-80F50E5C991D} = {0F730129-B00F-44F5-8C03-1EA5732A4EE1}
+		{87FEA5F3-0049-445E-A247-C33EC2222480} = {74DAC3C3-978D-4C98-91F3-8A27D0E525EE}
 	EndGlobalSection
 EndGlobal

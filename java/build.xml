@@ -5,12 +5,12 @@
     <property name="build.name" value="${ant.project.name}.${build.number}"/>
     <property name="build" value="${basedir}/build"/>
     <property name="build.output" value="${build}/output"/>
-    <property name="release" value="${build.output}/release"/>
+    <property name="distribution" value="${build.output}/dist"/>
     <property name="reports" value="${build.output}/reports"/>
     <property name="src" value="${basedir}/src"/>
     <property name="test" value="${basedir}/test"/>
-    <property name="release.jar" value="${release}/${build.name}.jar"/>
-    <property name="test.jar" value="${release}/${build.name}.test.jar"/>
+    <property name="release.jar" value="${distribution}/${build.name}.jar"/>
+    <property name="test.jar" value="${distribution}/${build.name}.test.jar"/>
 
     <import file="${build}/macros.xml"/>
 
@@ -39,11 +39,11 @@
     </target>
 
     <target name="package">
-        <mkdir dir="${release}"/>
+        <mkdir dir="${distribution}"/>
 
-        <zip destfile="${release}/${build.name}.src.zip" basedir="src"/>
+        <zip destfile="${distribution}/${build.name}.src.zip" basedir="src"/>
         
-        <propertyfile file="${release}/build.properties">
+        <propertyfile file="${distribution}/build.properties">
           <entry key="stored.build.number" value="${build.number}"/>
           <entry key="stored.build.name" value="${build.name}"/>
         </propertyfile>
