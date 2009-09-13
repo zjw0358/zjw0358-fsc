@@ -31,37 +31,30 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
    instance
   | false -> t |> missingHandler.Invoke
   
- let toInstance (t:Type, replacement) (p:ParameterInfo) = 
-  let shouldReplace = p.ParameterType.Equals(t)
-  match shouldReplace,replacement with
-  | true,Some(o) -> o
-  | _ -> p.ParameterType |> get
-  
- let getParameters (t:Type) = 
-  let sortedConstructors = t.GetConstructors() |> Seq.sortBy (fun c->c.GetParameters().Count())
-  sortedConstructors.LastOrDefault().GetParameters()
+ let createInstance (t:Type, resolver:(Type -> obj) ) = 
+  let sortedConstructors = t.GetConstructors() |> Array.sortBy(fun c -> -c.GetParameters().Length)
+  sortedConstructors |> Array.pick( fun c ->
+    try 
+      let instances = c.GetParameters() |> Array.map( fun p -> resolver(p.ParameterType) )
+      Some(Activator.CreateInstance(t, instances))
+    with | :? ContainerException -> None )
  
- let getArgs (t,replacement) = 
-  getParameters >> Array.map ((t,replacement) |> toInstance)
- 
- let createInstance = Activator.CreateInstance : Type * obj array -> obj 
- 
- let create (i,c,existing)  = 
-  ( c, c |> getArgs (i,existing) ) |> createInstance
- 
+ let create (t:Type) = createInstance(t, get) 
+
  let addActivator (t,f) =
   match activators.ContainsKey(t) with
   | true -> raise( new ContainerException(t.ToString() + " already added to container"))
   | false -> activators.Add(t,f)
  
  let add (i,c) =
-  addActivator (i, fun() -> create (i,c,None))
+  addActivator (i, fun() -> create(c) )
   
  let decorate (i,c) =
-  let existing = get i
-  let result = i |> activators.Remove
-  addActivator (i, fun() -> create (i,c,Some(existing)) )
- 
+  let existing = activators.[i]
+  activators.[i] <- fun() -> 
+   createInstance(c, fun t -> 
+    if t.Equals(i) then existing() :?> obj else get(t))
+
  new() = SimpleContainer(fun (t) -> raise ( new ContainerException(t.ToString() + " not found in container") ))
  
  interface IContainer with
@@ -77,8 +70,3 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
   member this.Resolve(t) = t |> get
   member this.Decorate<'Interface,'Decorator>() = (typeof<'Interface>,typeof<'Decorator>) |> decorate
   
-
-
- 
-
-

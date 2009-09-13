@@ -7,6 +7,17 @@ namespace Container.Tests
     [TestFixture]
     public class ContainerTests
     {
+	[Test]
+  	public void ShouldResolveUsingConstructorWithMostDependenciesThatIsSatisfiable()
+	{
+    	    IContainer container = new SimpleContainer();
+    	    container.Add<MyThingWithReverseConstructor>();
+
+	    var myThing = container.Resolve<MyThingWithReverseConstructor>();
+
+	    Assert.That(myThing.Dependency, Is.Null);
+	}
+
         [Test]
         public void ShouldChainContainersThroughMissingAction()
         {
