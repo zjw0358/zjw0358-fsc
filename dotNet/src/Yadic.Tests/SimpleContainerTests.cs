@@ -21,12 +21,12 @@ namespace Container.Tests
         [Test]
         public void ShouldChainContainersThroughMissingAction()
         {
-            IContainer child = new SimpleContainer();
-            child.Add<IThing, ThingWithNoDependencies>();
+            IContainer parent = new SimpleContainer();
+            parent.Add<IThing, ThingWithNoDependencies>();
 
-            IContainer parent = new SimpleContainer(child.Resolve);
+            IContainer child = new SimpleContainer(parent.Resolve);
 
-            IThing thing = parent.Resolve<IThing>();
+            IThing thing = child.Resolve<IThing>();
 
             Assert.That(thing, Is.InstanceOfType(typeof(ThingWithNoDependencies)));
         }
