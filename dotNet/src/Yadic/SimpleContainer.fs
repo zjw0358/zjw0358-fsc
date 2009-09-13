@@ -53,7 +53,7 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
   let existing = activators.[i]
   activators.[i] <- fun() -> 
    createInstance(c, fun t -> 
-    if t.Equals(i) then existing() :?> obj else get(t))
+    if t.Equals(i) then existing() else get(t))
 
  new() = SimpleContainer(fun (t) -> raise ( new ContainerException(t.ToString() + " not found in container") ))
  
