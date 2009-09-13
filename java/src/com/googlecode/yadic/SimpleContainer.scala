@@ -31,9 +31,9 @@ class SimpleContainer(missingHandler: (Class[_]) => Object) extends Container {
   }
 
   def decorate(interface: Class[_], concrete: Class[_]): Unit = {
-    val existing = resolve(interface)
+    val existing = activators.get(interface)
     activators.put(interface, () => createInstance(concrete, (aClass: Class[_]) => {
-      if(aClass.equals(interface)) existing else resolve(aClass)
+      if(aClass.equals(interface)) existing() else resolve(aClass)
     }))
   }
 

@@ -7,4 +7,4 @@ dotNet/C:\\NUnitPrimaryTrace.txt
 java/out
 java/*.iws
 java/build/output
-
+*.*~
