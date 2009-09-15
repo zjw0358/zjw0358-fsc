@@ -23,7 +23,7 @@ type IContainer =
 type SimpleContainer(missingHandler:Func<Type,obj>) = 
  let activators = new Dictionary<Type, unit->obj>()
  
- let get t = 
+ let resolve t = 
   match activators.ContainsKey(t) with 
   | true ->  
    let instance = activators.[t]()
@@ -39,7 +39,7 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
       Some(Activator.CreateInstance(t, instances))
     with | :? ContainerException -> None )
  
- let create (t:Type) = createInstance(t, get) 
+ let create (t:Type) = createInstance(t, resolve) 
 
  let addActivator (t,f) =
   match activators.ContainsKey(t) with
@@ -53,7 +53,7 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
   let existing = activators.[i]
   activators.[i] <- fun() -> 
    createInstance(c, fun t -> 
-    if t.Equals(i) then existing() else get(t))
+    if t.Equals(i) then existing() else resolve(t))
 
  new() = SimpleContainer(fun (t) -> raise ( new ContainerException(t.ToString() + " not found in container") ))
  
@@ -66,7 +66,7 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
   [<OverloadID("addByConcrete")>]
   member this.Add<'T>(f) = (typeof<'T>, fun () -> f.Invoke() ) |> addActivator
   
-  member this.Resolve<'T>() = typeof<'T> |> get :?> 'T 
-  member this.Resolve(t) = t |> get
+  member this.Resolve<'T>() = typeof<'T> |> resolve :?> 'T 
+  member this.Resolve(t) = t |> resolve
   member this.Decorate<'Interface,'Decorator>() = (typeof<'Interface>,typeof<'Decorator>) |> decorate
   
