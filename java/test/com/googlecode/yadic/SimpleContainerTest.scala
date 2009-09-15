@@ -3,7 +3,7 @@ package com.googlecode.yadic
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert.{assertThat, assertTrue, fail, assertSame}
 import org.junit.{Test}
-import yadic.SimpleContainerTest._
+import com.googlecode.yadic.SimpleContainerTest._
 
 class SimpleContainerTest {
   @Test
