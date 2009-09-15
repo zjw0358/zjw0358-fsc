@@ -8,3 +8,4 @@ java/out
 java/*.iws
 java/build/output
 *.*~
+*.*orig
