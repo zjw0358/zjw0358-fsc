@@ -103,7 +103,11 @@
     <option name="projectName" value="yadic" />
   </component>
   <component name="ProjectDictionaryState">
-    <dictionary name="dan" />
+    <dictionary name="dan">
+      <words>
+        <w>dependancies</w>
+      </words>
+    </dictionary>
   </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">

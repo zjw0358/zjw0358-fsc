@@ -4,8 +4,35 @@ import org.hamcrest.CoreMatchers._
 import org.junit.Assert.{assertThat, assertTrue, fail, assertSame}
 import org.junit.{Test}
 import com.googlecode.yadic.SimpleContainerTest._
+import java.util.ArrayList
+import java.util.List
+import java.util.concurrent.{TimeUnit, Future, Executors, Callable}
 
 class SimpleContainerTest {
+  @Test
+  def shouldOnlyCallCreationLambdaOnceEvenFromDifferentThreads {
+    var count = 0
+    val container = new SimpleContainer
+
+    container.add(classOf[Thing], () => {
+      count = count + 1
+      Thread.sleep(10)
+      new ThingWithNoDependencies
+    })
+
+    val service = Executors.newFixedThreadPool(2)
+
+    val collection = new ArrayList[Callable[Thing]]
+    collection.add(new Creator(container))
+    collection.add(new Creator(container))
+    val results:List[Future[Thing]] = service.invokeAll(collection)
+    service.shutdown
+    service.awaitTermination(50, TimeUnit.MILLISECONDS)
+
+    assertThat( count, is(1) )
+    assertSame( results.get(0).get, results.get(1).get)
+  }
+
   @Test
   def shouldResolveUsingConstructorWithMostDependenciesThatIsSatisfiable {
     val container = new SimpleContainer
@@ -125,7 +152,7 @@ class SimpleContainerTest {
   }
 
   @Test
-  def ResolveshouldReturnSameInstanceWhenCalledTwice {
+  def resolveShouldReturnSameInstanceWhenCalledTwice {
     val container = new SimpleContainer
     container.add(classOf[ThingWithNoDependencies])
 
@@ -186,6 +213,10 @@ class SimpleContainerTest {
 }
 
 object SimpleContainerTest {
+  class Creator(container:SimpleContainer) extends Callable[Thing] {
+    def call = container.resolve(classOf[Thing]).asInstanceOf[Thing]
+  }
+
   class MyThingWithReverseConstructor(val dependency: ThingWithNoDependencies) extends Thing {
     def this() = this (null)
   }

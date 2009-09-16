@@ -6,16 +6,12 @@ import java.util.HashMap
 class SimpleContainer(missingHandler: (Class[_]) => Object) extends Container {
   def this() = this ((aClass:Class[_]) => {throw new ContainerException(aClass.getName + " not found in container")})
 
-  val activators = new HashMap[Class[_], () => Object]
+  val activators = new HashMap[Class[_], Activator]
 
   def resolve(aClass: Class[_]): Object = {
     activators.get(aClass) match {
       case null => missingHandler(aClass)
-      case activator => {
-        val instance = activator()
-        activators.put(aClass, () => instance)
-        instance
-      }
+      case creator:Activator => creator.activate()
     }
   }
 
@@ -26,15 +22,15 @@ class SimpleContainer(missingHandler: (Class[_]) => Object) extends Container {
   def add(aClass: Class[_], activator: () => Object): Unit = {
     activators.containsKey(aClass) match {
       case true => throw new ContainerException(aClass.getName + " already added to container")
-      case false => activators.put(aClass, activator)
+      case false => activators.put(aClass, new LazyInstanceActivator(activator))
     }
   }
 
   def decorate(interface: Class[_], concrete: Class[_]): Unit = {
     val existing = activators.get(interface)
-    activators.put(interface, () => createInstance(concrete, (aClass: Class[_]) => {
-      if(aClass.equals(interface)) existing() else resolve(aClass)
-    }))
+    activators.put(interface, new LazyInstanceActivator(() => createInstance(concrete, (aClass: Class[_]) => {
+      if(aClass.equals(interface)) existing.activate() else resolve(aClass)
+    })))
   }
 
   def createInstance(aClass: Class[_]): Object = createInstance(aClass, resolve(_))
