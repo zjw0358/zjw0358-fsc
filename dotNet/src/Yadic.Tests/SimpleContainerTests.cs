@@ -1,4 +1,6 @@
-﻿using Yadic;
+using System.Collections.Generic;
+﻿using System.Threading;
+using Yadic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -7,6 +9,29 @@ namespace Container.Tests
     [TestFixture]
     public class ContainerTests
     {
+        [Test]
+        public void ShouldOnlyCallCreationLambdaOnceEvenFromDifferentThreads()
+        {
+            int count = 0;
+            IContainer container = new SimpleContainer();
+            
+            container.Add<IThing>(() => {
+                  count++;
+                  Thread.Sleep(10);
+                  return new ThingWithNoDependencies();
+              });
+
+            List<IThing> results = new List<IThing>();
+            ThreadPool.QueueUserWorkItem( (ignore) => results.Add(container.Resolve<IThing>()) );
+            ThreadPool.QueueUserWorkItem( (ignore) => results.Add(container.Resolve<IThing>()) );
+
+            Thread.Sleep(50);
+
+            Assert.That(count, Is.EqualTo(1));
+            Assert.AreSame(results[0],results[1]);
+        }
+
+
 	[Test]
   	public void ShouldResolveUsingConstructorWithMostDependenciesThatIsSatisfiable()
 	{

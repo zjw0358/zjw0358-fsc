@@ -20,15 +20,22 @@ type IContainer =
  abstract Resolve : Type -> obj
  abstract Decorate<'Interface, 'Component> : unit -> unit
 
+type IActivator =
+ abstract Activate: unit -> obj
+
+type LazyActivator(activator:unit->obj) =
+ let instance = lazy( activator() )
+
+ interface IActivator with
+  member this.Activate() = instance.Force() 
+
+
 type SimpleContainer(missingHandler:Func<Type,obj>) = 
- let activators = new Dictionary<Type, unit->obj>()
+ let activators = new Dictionary<Type, IActivator>()
  
  let resolve t = 
   match activators.ContainsKey(t) with 
-  | true ->  
-   let instance = activators.[t]()
-   activators.[t] <- fun() -> instance
-   instance
+  | true -> activators.[t].Activate()
   | false -> t |> missingHandler.Invoke
   
  let createInstance (t:Type, resolver:(Type -> obj) ) = 
@@ -44,16 +51,16 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
  let addActivator (t,f) =
   match activators.ContainsKey(t) with
   | true -> raise( new ContainerException(t.ToString() + " already added to container"))
-  | false -> activators.Add(t,f)
+  | false -> activators.Add(t, new LazyActivator(f))
  
  let add (i,c) =
   addActivator (i, fun() -> create(c) )
   
  let decorate (i,c) =
   let existing = activators.[i]
-  activators.[i] <- fun() -> 
+  activators.[i] <- new LazyActivator(fun() -> 
    createInstance(c, fun t -> 
-    if t.Equals(i) then existing() else resolve(t))
+    if t.Equals(i) then existing.Activate() else resolve(t)))
 
  new() = SimpleContainer(fun (t) -> raise ( new ContainerException(t.ToString() + " not found in container") ))
  
