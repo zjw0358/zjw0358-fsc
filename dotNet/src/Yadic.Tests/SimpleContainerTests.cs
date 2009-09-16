@@ -21,9 +21,9 @@ namespace Container.Tests
                   return new ThingWithNoDependencies();
               });
 
-            List<IThing> results = new List<IThing>();
-            ThreadPool.QueueUserWorkItem( (ignore) => results.Add(container.Resolve<IThing>()) );
-            ThreadPool.QueueUserWorkItem( (ignore) => results.Add(container.Resolve<IThing>()) );
+            IThing[] results = new IThing[2];
+            ThreadPool.QueueUserWorkItem( (ignore) => results[0] = container.Resolve<IThing>() );
+            ThreadPool.QueueUserWorkItem( (ignore) => results[1] = container.Resolve<IThing>() );
 
             Thread.Sleep(50);
 
