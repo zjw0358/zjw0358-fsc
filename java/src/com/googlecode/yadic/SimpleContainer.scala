@@ -11,7 +11,7 @@ class SimpleContainer(missingHandler: (Class[_]) => Object) extends Container {
   def resolve(aClass: Class[_]): Object = {
     activators.get(aClass) match {
       case null => missingHandler(aClass)
-      case creator:Activator => creator.activate()
+      case activator:Activator => activator.activate()
     }
   }
 
@@ -22,14 +22,14 @@ class SimpleContainer(missingHandler: (Class[_]) => Object) extends Container {
   def add(aClass: Class[_], activator: () => Object): Unit = {
     activators.containsKey(aClass) match {
       case true => throw new ContainerException(aClass.getName + " already added to container")
-      case false => activators.put(aClass, new LazyInstanceActivator(activator))
+      case false => activators.put(aClass, new LazyActivator(activator))
     }
   }
 
   def decorate(interface: Class[_], concrete: Class[_]): Unit = {
     val existing = activators.get(interface)
-    activators.put(interface, new LazyInstanceActivator(() => createInstance(concrete, (aClass: Class[_]) => {
-      if(aClass.equals(interface)) existing.activate() else resolve(aClass)
+    activators.put(interface, new LazyActivator(() => createInstance(concrete, (aClass: Class[_]) => {
+      if(aClass.equals(interface)) existing.activate else resolve(aClass)
     })))
   }
 
