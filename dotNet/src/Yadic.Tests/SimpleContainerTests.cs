@@ -1,8 +1,8 @@
 using Yadic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using System.Threading;
 using System.Collections.Generic;
-﻿using System.Threading;
 
 namespace Container.Tests
 {
