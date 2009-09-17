@@ -16,10 +16,10 @@ namespace Container.Tests
             IContainer container = new SimpleContainer();
             
             container.Add<IThing>(() => {
-                  count++;
-                  Thread.Sleep(10);
-                  return new ThingWithNoDependencies();
-              });
+                count++;
+                Thread.Sleep(10);
+                return new ThingWithNoDependencies();
+            });
 
             IThing[] results = new IThing[2];
             ThreadPool.QueueUserWorkItem( (ignore) => results[0] = container.Resolve<IThing>() );
