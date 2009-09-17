@@ -48,7 +48,7 @@
             <entry key="release.version" value="${release.version}"/>
             <entry key="release.name" value="${release.name}"/>
             <entry key="release.files" value="${release.jar}"/>
-            <entry key="${release.jar}.description" value="Yadic for Java (requires scala-library.jar) build:${release.version}"/>
+            <entry key="${release.jar}.description" value="Yadic for Java (requires scala-library.jar) build:${build.number}"/>
             <entry key="${release.jar}.labels" value="Featured"/>
         </propertyfile>
     </target>

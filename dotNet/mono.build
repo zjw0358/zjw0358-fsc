@@ -46,7 +46,7 @@
 release.version=${release.version}
 release.name=${release.name}
 release.files=Yadic.dll
-Yadic.dll.description=Yadic for .NET (requires FSharp.Core.dll)
+Yadic.dll.description=Yadic for .NET (requires FSharp.Core.dll) build\:${build.number}
 Yadic.dll.labels=Featured
     </echo>
 
