@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="release">
 
-    <property name="distribution" value="output/dist"/>
+    <property name="distribution" value="artifacts"/>
     <property file="${distribution}/release.properties"/>
-    <property name="release.notes" value=""/>
 
     <taskdef classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask"
              classpath="lib/ant-googlecode-0.0.1.jar"
              name="gcupload"/>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml"
+             classpath="lib/ant-contrib.jar"/>
 
     <macrodef name="upload">
         <attribute name="source"/>
@@ -24,11 +26,11 @@
     </macrodef>
 
     <target name="release">
-        <upload source="${release.name}.jar" destination="${release.name}.jar" labels="Featured"
-                summary="Yadic for Java (requires scala-library.jar) build:${release.version} "/>
-        <!--upload source="${stored.build.name}.src.zip" destination="${release.name}.src.zip"
-                summary="Source zip for IDE intellisense support (${release.version}). ${release.notes}"/-->
-        <!--upload file="${stored.build.name}.war" destination="${release.name}.war"
-                summary="Example Web App (${release.version})"/-->
+        <for list="${release.files}" param="file">
+            <sequential>
+                <upload source="@{file}" destination="@{file}" labels="${@{file}.labels}"
+                        summary="${@{file}.description}"/>
+            </sequential>
+        </for>
     </target>
 </project>

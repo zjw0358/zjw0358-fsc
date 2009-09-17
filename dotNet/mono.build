@@ -1,10 +1,13 @@
 <?xml version="1.0"?>
-<project name="Yadic" default="build" basedir=".">
+<project name="yadic" default="build" basedir=".">
   <description>Mono Build script for Yadic</description>
 
+  <property name="build.number" value="dev.build" overwrite="false"/>
   <property name="build.dir" value="build"/>
+  <property name="release.version" value="${build.number}"/>
+  <property name="release.name" value="${project::get-name()}"/>
   <property name="artifacts.dir" value="${build.dir}/artifacts" />
-  <property name="reports.dir" value="${build.dir}/reports" />
+  <property name="reports.dir" value="${artifacts.dir}/reports" />
   <property name="dotnet35" value="/usr/lib/mono/gac/System.Core/3.5.0.0__b77a5c561934e089/"/>
   <property name="fsc.dir" value="tools/fsharp"/>
   <property name="fsc" value="${fsc.dir}/fsc"/>
@@ -14,11 +17,11 @@
   <target name="build" depends="-clean, -compile, -unittest" description="compiles the source code and runs unit tests" />
 
   <target name="-clean" description="deletes the build artifacts from previous build">
-    <delete dir="${build.dir}" />
-    <mkdir dir="${build.dir}"/>
+    <delete dir="${artifacts.dir}" />
+    <mkdir dir="${artifacts.dir}"/>
   </target>
 
-  <target name="-compile" description="compiles fsharp code">
+  <target name="-compile" description="compiles code and tests">
     <mkdir dir="${artifacts.dir}"/>
     <echo message="Compiling 'src/Yadic/SimpleContainer.fs' to '${artifacts.dir}/Yadic.dll'"/>
     <exec basedir="." program="${fsc}">
@@ -38,14 +41,24 @@
         <include name="${artifacts.dir}/*.dll" />
       </references>
     </csc>
+
+    <echo file="${artifacts.dir}/release.properties">
+release.version=${release.version}
+release.name=${release.name}
+release.files=Yadic.dll
+Yadic.dll.description=Yadic for .NET (requires FSharp.Core.dll)
+Yadic.dll.labels=Featured
+    </echo>
+
   </target>
 
   <target name="-unittest">
     <mkdir dir="${reports.dir}"/>
     <exec basedir="." program="${nunit}">
-      <arg line="-xml=${reports.dir}/nunit-output.xml -nologo -nodots" />
+      <arg line="-xml=${reports.dir}/nunit.xml -nologo -nodots" />
       <arg file="${artifacts.dir}/Yadic.Tests.dll" />
     </exec>
+    <delete dir="${artifacts.dir}/%temp%"/>
   </target>
 
 </project>
