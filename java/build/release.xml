@@ -25,7 +25,7 @@
 
     <target name="release">
         <upload source="${release.name}.jar" destination="${release.name}.jar" labels="Featured"
-                summary="Yadic for Java #${release.version} (requires scala-library.jar)"/>
+                summary="Yadic for Java (requires scala-library.jar) build:${release.version} "/>
         <!--upload source="${stored.build.name}.src.zip" destination="${release.name}.src.zip"
                 summary="Source zip for IDE intellisense support (${release.version}). ${release.notes}"/-->
         <!--upload file="${stored.build.name}.war" destination="${release.name}.war"
