@@ -1,15 +1,15 @@
-using System.Collections.Generic;
-﻿using System.Threading;
 using Yadic;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
+using System.Collections.Generic;
+﻿using System.Threading;
 
 namespace Container.Tests
 {
     [TestFixture]
     public class ContainerTests
     {
-       /* [Test]
+        [Test]
         public void ShouldOnlyCallCreationLambdaOnceEvenFromDifferentThreads()
         {
             int count = 0;
@@ -29,7 +29,7 @@ namespace Container.Tests
 
             Assert.That(count, Is.EqualTo(1));
             Assert.AreSame(results[0],results[1]);
-        }*/
+        }
 
 	[Test]
   	public void ShouldResolveUsingConstructorWithMostDependenciesThatIsSatisfiable()
