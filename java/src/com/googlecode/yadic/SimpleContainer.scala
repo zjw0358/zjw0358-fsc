@@ -16,7 +16,7 @@ class SimpleContainer(missingHandler: (Class[_]) => Object) extends Container {
   }
 
   def add(concrete: Class[_]): Unit = add(concrete, () => createInstance(concrete) )
-
+            
   def add(interface: Class[_], concrete: Class[_]): Unit = add(interface, () => createInstance(concrete) )
 
   def add(aClass: Class[_], activator: () => Object): Unit = {

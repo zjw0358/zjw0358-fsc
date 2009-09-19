@@ -40,11 +40,14 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
   
  let createInstance (t:Type, resolver:(Type -> obj) ) = 
   let sortedConstructors = t.GetConstructors() |> Array.sortBy(fun c -> -c.GetParameters().Length)
-  sortedConstructors |> Array.pick( fun c ->
+  let result = sortedConstructors |> Array.tryPick( fun c ->
     try 
       let instances = c.GetParameters() |> Array.map( fun p -> resolver(p.ParameterType) )
       Some(Activator.CreateInstance(t, instances))
-    with | :? ContainerException -> None )
+    with | :? ContainerException -> None ) 
+  match result with
+  | Some(instance) -> instance
+  | None -> raise( new ContainerException(t.ToString() + " does not have a satisfiable constructor"))
  
  let create (t:Type) = createInstance(t, resolve) 
 

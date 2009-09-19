@@ -9,6 +9,16 @@ namespace Container.Tests
     public class ContainerTests
     {
         [Test]
+        [ExpectedException(typeof(ContainerException))]
+        public void ResolveShouldThrowExceptionIfConstructorIsNotSatifiable()
+        {
+            IContainer container = new SimpleContainer();
+            container.Add<MyThing>();
+            container.Resolve<MyThing>();
+            Assert.Fail("Should have thrown exception");
+        }
+
+        [Test]
         public void ShouldOnlyCallCreationLambdaOnceEvenFromDifferentThreads()
         {
             int count = 0;
