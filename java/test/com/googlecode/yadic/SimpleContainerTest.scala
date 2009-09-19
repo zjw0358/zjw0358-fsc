@@ -9,6 +9,14 @@ import java.util.List
 import java.util.concurrent.{TimeUnit, Future, Executors, Callable}
 
 class SimpleContainerTest {
+  @Test {val expected = classOf[ContainerException]}
+  def resolveShouldThrowExceptionIfConstructorIsNotSatifiable {
+    val container = new SimpleContainer
+    container.add(classOf[MyThing])
+    container.resolve(classOf[MyThing])
+    fail("should have thrown exception")
+  }
+
   @Test
   def shouldOnlyCallCreationLambdaOnceEvenFromDifferentThreads {
     var count = 0

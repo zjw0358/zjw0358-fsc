@@ -45,6 +45,6 @@ class SimpleContainer(missingHandler: (Class[_]) => Object) extends Container {
         case e:ContainerException =>
       }
     })
-    throw new ContainerException(aClass.getName + " did not have all it's dependancies satisfied")
+    throw new ContainerException(aClass.getName + " does not have a satisfiable constructor")
   }
 }
