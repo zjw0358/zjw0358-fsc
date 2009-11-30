@@ -1,11 +1,8 @@
 syntax: glob
-dotNet/bin/**
-dotNet/obj/**
-dotNet/build
-dotNet/%temp%
-dotNet/C:\\NUnitPrimaryTrace.txt
-java/out
-java/*.iws
-java/build/artifacts
+bin/**
+obj/**
+build
+%temp%
+C:\\NUnitPrimaryTrace.txt
 *.*~
 *.*orig
