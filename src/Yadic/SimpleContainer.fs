@@ -1,4 +1,4 @@
-﻿#light
+#light
 
 namespace Yadic
 
@@ -12,9 +12,7 @@ type public ContainerException(s) =
  
 type IContainer = 
  abstract Add<'T> : unit -> unit
- [<OverloadID("addByInterface")>]
  abstract Add<'Interface, 'Component> : unit -> unit
- [<OverloadID("addByConcrete")>]
  abstract Add<'T> : Func<obj> -> unit
  abstract Resolve<'T> : unit -> 'T
  abstract Resolve : Type -> obj
@@ -69,13 +67,8 @@ type SimpleContainer(missingHandler:Func<Type,obj>) =
  
  interface IContainer with
   member this.Add<'T>() = (typeof<'T>,typeof<'T>) |> add
-  
-  [<OverloadID("addByInterface")>]
-  member this.Add<'Interface,'Component>() = (typeof<'Interface>,typeof<'Component>) |> add 
-  
-  [<OverloadID("addByConcrete")>]
+  member this.Add<'Interface,'Component>() = (typeof<'Interface>,typeof<'Component>) |> add
   member this.Add<'T>(f) = (typeof<'T>, fun () -> f.Invoke() ) |> addActivator
-  
   member this.Resolve<'T>() = typeof<'T> |> resolve :?> 'T 
   member this.Resolve(t) = t |> resolve
   member this.Decorate<'Interface,'Decorator>() = (typeof<'Interface>,typeof<'Decorator>) |> decorate
