@@ -6,7 +6,9 @@
   <property name="build.dir" value="build"/>
   <property name="release.version" value="${build.number}"/>
   <property name="release.name" value="${project::get-name()}-${release.version}"/>
+  <property name="release.dll" value="${release.name}.dll"/>
   <property name="artifacts.dir" value="${build.dir}/artifacts" />
+  <property name="release.dll.path" value="${artifacts.dir}/${release.dll}"/>
   <property name="reports.dir" value="${artifacts.dir}/reports" />
   <property name="dotnet35" value="/usr/lib/mono/gac/System.Core/3.5.0.0__b77a5c561934e089/"/>
   <property name="fsc.dir" value="tools/fsharp"/>
@@ -18,15 +20,15 @@
 
   <target name="-clean" description="deletes the build artifacts from previous build">
     <delete dir="${artifacts.dir}" />
-${project.name}    <mkdir dir="${artifacts.dir}"/>
+    <mkdir dir="${artifacts.dir}"/>
   </target>
 
   <target name="-compile" description="compiles code and tests">
     <mkdir dir="${artifacts.dir}"/>
-    <echo message="Compiling 'src/Yadic/SimpleContainer.fs' to '${artifacts.dir}/Yadic.dll'"/>
+    <echo message="Compiling 'src/Yadic/SimpleContainer.fs' to '${release.dll.path}'"/>
     <exec basedir="." program="${fsc}">
       <arg line="-r:${dotnet35}/System.Core.dll" />
-      <arg line="--nologo -a --optimize+ -o:${artifacts.dir}/Yadic.dll src/Yadic/SimpleContainer.fs" />
+      <arg line="--nologo -a --optimize+ -o:${release.dll.path} src/Yadic/SimpleContainer.fs" />
     </exec>
 
     <copy file="${fsc.dir}/FSharp.Core.dll" todir="${artifacts.dir}" />
@@ -46,9 +48,9 @@ ${project.name}    <mkdir dir="${artifacts.dir}"/>
 project.name=${project::get-name()}
 release.version=${release.version}
 release.name=${release.name}
-release.files=Yadic.dll
-Yadic.dll.description=Yadic for .NET (requires FSharp.Core.dll) build\:${build.number}
-Yadic.dll.labels=Featured
+release.files=${release.dll}
+${release.dll}.description=Yadic for .NET (requires FSharp.Core.dll) build\:${build.number}
+${release.dll}.labels=Featured
     </echo>
 
   </target>
