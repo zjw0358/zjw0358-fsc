@@ -5,7 +5,7 @@
   <property name="build.number" value="dev.build" overwrite="false"/>
   <property name="build.dir" value="build"/>
   <property name="release.version" value="${build.number}"/>
-  <property name="release.name" value="${project::get-name()}"/>
+  <property name="release.name" value="${project::get-name()}-${release.version}"/>
   <property name="artifacts.dir" value="${build.dir}/artifacts" />
   <property name="reports.dir" value="${artifacts.dir}/reports" />
   <property name="dotnet35" value="/usr/lib/mono/gac/System.Core/3.5.0.0__b77a5c561934e089/"/>
@@ -18,7 +18,7 @@
 
   <target name="-clean" description="deletes the build artifacts from previous build">
     <delete dir="${artifacts.dir}" />
-    <mkdir dir="${artifacts.dir}"/>
+${project.name}    <mkdir dir="${artifacts.dir}"/>
   </target>
 
   <target name="-compile" description="compiles code and tests">
@@ -43,6 +43,7 @@
     </csc>
 
     <echo file="${artifacts.dir}/release.properties">
+project.name=${project::get-name()}
 release.version=${release.version}
 release.name=${release.name}
 release.files=Yadic.dll
